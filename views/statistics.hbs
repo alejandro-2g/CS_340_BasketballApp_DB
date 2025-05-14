@@ -1,0 +1,26 @@
+<h1>Statistics</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Statistic ID</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each statistics}}
+    <tr>
+      <td>{{this.StatisticID}}</td>
+      <td>{{this.StatisticName}}</td>
+      <td>{{this.Description}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<h2>Add New Statistic</h2>
+<form method="POST" action="/statistics/add">
+  <input name="StatisticName" placeholder="Statistic Name" required />
+  <input name="Description" placeholder="Description" />
+  <button type="submit">Add Statistic</button>
+</form>

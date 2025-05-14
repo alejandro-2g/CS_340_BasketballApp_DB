@@ -1,0 +1,38 @@
+<h1>Games</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Game ID</th>
+      <th>Date</th>
+      <th>Location</th>
+      <th>Team A</th>
+      <th>Team B</th>
+      <th>Score A</th>
+      <th>Score B</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each games}}
+    <tr>
+      <td>{{this.GameID}}</td>
+      <td>{{this.Date}}</td>
+      <td>{{this.Location}}</td>
+      <td>{{this.TeamAID}}</td>
+      <td>{{this.TeamBID}}</td>
+      <td>{{this.ScoreA}}</td>
+      <td>{{this.ScoreB}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<h2>Schedule New Game</h2>
+<form method="POST" action="/games/add">
+  <input name="Date" type="date" required />
+  <input name="Location" placeholder="Location" required />
+  <input name="TeamAID" placeholder="Team A ID" required />
+  <input name="TeamBID" placeholder="Team B ID" required />
+  <input name="ScoreA" type="number" />
+  <input name="ScoreB" type="number" />
+  <button type="submit">Add Game</button>
+</form>

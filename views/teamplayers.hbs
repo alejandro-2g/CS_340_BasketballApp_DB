@@ -1,0 +1,27 @@
+<h1>Team Players</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Team ID</th>
+      <th>Player ID</th>
+      <th>Jersey Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each teamplayers}}
+    <tr>
+      <td>{{this.TeamID}}</td>
+      <td>{{this.PlayerID}}</td>
+      <td>{{this.JerseyNumber}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<h2>Add Player to Team</h2>
+<form method="POST" action="/teamplayers/add">
+  <input name="TeamID" placeholder="Team ID" required />
+  <input name="PlayerID" placeholder="Player ID" required />
+  <input name="JerseyNumber" placeholder="Jersey #" />
+  <button type="submit">Add</button>
+</form>

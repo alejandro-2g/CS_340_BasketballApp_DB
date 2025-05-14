@@ -1,0 +1,58 @@
+<h1>Players</h1>
+
+{{!-- READ Table --}}
+<table>
+  <thead>
+    <tr>
+      <th>Player ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Position</th>
+      <th>Skill Level</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each players}}
+    <tr>
+      <td>{{this.PlayerID}}</td>
+      <td>{{this.FirstName}}</td>
+      <td>{{this.LastName}}</td>
+      <td>{{this.Position}}</td>
+      <td>{{this.SkillLevel}}</td>
+      <td>
+        <form method="POST" action="/players/delete">
+          <input type="hidden" name="PlayerID" value="{{this.PlayerID}}" />
+          <button type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<hr>
+
+<h2>Add a New Player</h2>
+<form method="POST" action="/players/add">
+  <label>First Name:</label>
+  <input type="text" name="FirstName" required><br>
+
+  <label>Last Name:</label>
+  <input type="text" name="LastName" required><br>
+
+  <label>Position:</label>
+  <select name="Position" required>
+    <option value="">Select...</option>
+    <option value="PG">PG</option>
+    <option value="SG">SG</option>
+    <option value="SF">SF</option>
+    <option value="PF">PF</option>
+    <option value="C">C</option>
+  </select><br>
+
+  <label>Skill Level:</label>
+  <input type="number" name="SkillLevel" min="1" max="5" required><br>
+
+  <button type="submit">Add Player</button>
+</form>

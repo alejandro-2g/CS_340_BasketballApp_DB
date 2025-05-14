@@ -1,0 +1,33 @@
+<h1>Teams</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Team ID</th>
+      <th>Team Name</th>
+      <th>Coach Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each teams}}
+    <tr>
+      <td>{{this.TeamID}}</td>
+      <td>{{this.TeamName}}</td>
+      <td>{{this.CoachName}}</td>
+      <td>
+        <form method="POST" action="/teams/delete">
+          <input type="hidden" name="TeamID" value="{{this.TeamID}}" />
+          <button type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<h2>Add New Team</h2>
+<form method="POST" action="/teams/add">
+  <input name="TeamName" placeholder="Team Name" required />
+  <input name="CoachName" placeholder="Coach Name" />
+  <button type="submit">Add Team</button>
+</form>

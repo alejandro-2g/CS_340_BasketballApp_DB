@@ -1,0 +1,30 @@
+<h1>Player Statistics</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Player ID</th>
+      <th>Statistic ID</th>
+      <th>Game ID</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each playerstats}}
+    <tr>
+      <td>{{this.PlayerID}}</td>
+      <td>{{this.StatisticID}}</td>
+      <td>{{this.GameID}}</td>
+      <td>{{this.ValueOfStatistic}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<h2>Add Player Statistic</h2>
+<form method="POST" action="/playerstats/add">
+  <input name="PlayerID" placeholder="Player ID" required />
+  <input name="StatisticID" placeholder="Statistic ID" required />
+  <input name="GameID" placeholder="Game ID" required />
+  <input name="ValueOfStatistic" placeholder="Value" required />
+  <button type="submit">Add Stat</button>
+</form>

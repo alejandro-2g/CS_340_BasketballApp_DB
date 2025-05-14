@@ -1,0 +1,92 @@
+/* Typography */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #ffffff;
+    color: #0B162A; /* Navy blue text for contrast */
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    margin-left: 16px;
+    color: #1D428A; /* NBA royal blue */
+}
+
+/* Table Styles */
+table {
+    border-collapse: collapse;
+    margin-left: 32px;
+    width: 90%;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #1D428A; /* NBA blue */
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f4f4f4;
+}
+
+tr:hover {
+    background-color: #EEE;
+}
+
+/* Form Styles */
+.cuForm, form {
+    margin-left: 32px;
+    padding: 10px;
+    background-color: #F5F5F5;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+input, select {
+    margin-bottom: 8px;
+    margin-right: 12px;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #C8102E; /* NBA red */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #a60d24;
+}
+
+/* Navigation Bar */
+nav {
+    background-color: #1D428A; /* NBA blue */
+    padding: 16px;
+}
+
+a {
+    color: white;
+    margin-left: 16px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Homepage text */
+.homepageDescription {
+    margin-left: 32px;
+}
