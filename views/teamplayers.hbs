@@ -5,7 +5,11 @@
         <tr>
             <th>Team Name</th>
             <th>Player Name</th>
+<<<<<<< HEAD
              <th colspan="2">Actions</th>
+=======
+			<th colspan="2">Actions</th>
+>>>>>>> 28aa6e1920dc807db2b075f35269efabd9a26850
         </tr>
     </thead>
     <tbody>
@@ -13,6 +17,18 @@
             <tr>
                 <td>{{this.TeamName}}</td>
                 <td>{{this.PlayerName}}</td>
+  				<td class="snug">
+					<form method="POST" action="/teamplayers/delete">
+						<input type="hidden" name="TeamPlayerID" value="{{this.TeamPlayerID}}" />
+						<button type="submit">Delete</button>
+					</form>
+			  	</td>
+			  	<td class="snug">
+					<form method="POST" action="/teamplayers/update">
+						<input type="hidden" name="TeamPlayerID" value="{{this.TeamPlayerID}}" />
+						<button type="submit">Update</button>
+					</form>
+				</td>
             </tr>
         {{/each}}
     </tbody>
