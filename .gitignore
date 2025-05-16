@@ -2,3 +2,5 @@
 database/db-connector.js
 # package.lock and package.json should be sufficient
 node_modules/
+# vim .swp files
+*.swp

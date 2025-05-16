@@ -75,6 +75,12 @@ nav {
     padding: 16px;
 }
 
+nav span {
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+}
+
 a {
     color: white;
     margin-left: 16px;
