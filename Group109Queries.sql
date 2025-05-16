@@ -73,10 +73,6 @@ CREATE TABLE PlayerStatistics (
     FOREIGN KEY (GameID) REFERENCES Games(GameID) ON DELETE CASCADE
 );
 
--- -------------------------------------------------------
--- Example Data
--- -------------------------------------------------------
-
 -- Insert into Players
 INSERT INTO Players (FirstName, LastName, Position, SkillLevel) VALUES
 ('Marcus', 'Lee', 'PG', 4),
@@ -90,19 +86,27 @@ INSERT INTO Teams (TeamName, CoachName) VALUES
 ('Highland Hawks', 'Coach Rivera'),
 ('Metro Flyers', NULL);
 
--- Insert into TeamPlayers
+-- Insert into TeamPlayers using subqueries
 INSERT INTO TeamPlayers (TeamID, PlayerID, JerseyNumber) VALUES
-(1, 1, 3),
-(1, 2, 7),
-(2, 3, 15),
-(2, 1, 9),
-(3, 4, 22);
+((SELECT TeamID FROM Teams WHERE TeamName = 'Wildcats'), (SELECT PlayerID FROM Players WHERE FirstName = 'Marcus' AND LastName = 'Lee'), 3),
+((SELECT TeamID FROM Teams WHERE TeamName = 'Wildcats'), (SELECT PlayerID FROM Players WHERE FirstName = 'Julia' AND LastName = 'Ramos'), 7),
+((SELECT TeamID FROM Teams WHERE TeamName = 'Highland Hawks'), (SELECT PlayerID FROM Players WHERE FirstName = 'Dante' AND LastName = 'Knox'), 15),
+((SELECT TeamID FROM Teams WHERE TeamName = 'Highland Hawks'), (SELECT PlayerID FROM Players WHERE FirstName = 'Marcus' AND LastName = 'Lee'), 9),
+((SELECT TeamID FROM Teams WHERE TeamName = 'Metro Flyers'), (SELECT PlayerID FROM Players WHERE FirstName = 'Alexis' AND LastName = 'Tran'), 22);
 
--- Insert into Games
+-- Insert into Games using subqueries
 INSERT INTO Games (Date, Location, TeamAID, TeamBID, ScoreA, ScoreB) VALUES
-('2025-04-01', 'Court A', 1, 2, 56, 49),
-('2025-04-08', 'Court B', 2, 3, 71, 58),
-('2025-04-15', 'Outdoor Court', 1, 3, 64, 64);
+('2025-04-01', 'Court A',
+ (SELECT TeamID FROM Teams WHERE TeamName = 'Wildcats'),
+ (SELECT TeamID FROM Teams WHERE TeamName = 'Highland Hawks'), 56, 49),
+
+('2025-04-08', 'Court B',
+ (SELECT TeamID FROM Teams WHERE TeamName = 'Highland Hawks'),
+ (SELECT TeamID FROM Teams WHERE TeamName = 'Metro Flyers'), 71, 58),
+
+('2025-04-15', 'Outdoor Court',
+ (SELECT TeamID FROM Teams WHERE TeamName = 'Wildcats'),
+ (SELECT TeamID FROM Teams WHERE TeamName = 'Metro Flyers'), 64, 64);
 
 -- Insert into Statistics
 INSERT INTO Statistics (StatisticName, Description) VALUES
@@ -110,14 +114,32 @@ INSERT INTO Statistics (StatisticName, Description) VALUES
 ('Rebounds', 'Number of rebounds'),
 ('Assists', 'Total assists during a game');
 
--- Insert into PlayerStatistics
+-- Insert into PlayerStatistics using subqueries
 INSERT INTO PlayerStatistics (PlayerID, StatisticID, GameID, ValueOfStatistic) VALUES
-(1, 1, 1, 14.00),
-(1, 2, 1, 3.00),
-(2, 1, 1, 8.00),
-(3, 1, 2, 20.00),
-(3, 2, 2, 12.00),
-(4, 3, 3, 4.00);
+((SELECT PlayerID FROM Players WHERE FirstName = 'Marcus' AND LastName = 'Lee'),
+ (SELECT StatisticID FROM Statistics WHERE StatisticName = 'Points'),
+ (SELECT GameID FROM Games WHERE Date = '2025-04-01'), 14.00),
+
+((SELECT PlayerID FROM Players WHERE FirstName = 'Marcus' AND LastName = 'Lee'),
+ (SELECT StatisticID FROM Statistics WHERE StatisticName = 'Rebounds'),
+ (SELECT GameID FROM Games WHERE Date = '2025-04-01'), 3.00),
+
+((SELECT PlayerID FROM Players WHERE FirstName = 'Julia' AND LastName = 'Ramos'),
+ (SELECT StatisticID FROM Statistics WHERE StatisticName = 'Points'),
+ (SELECT GameID FROM Games WHERE Date = '2025-04-01'), 8.00),
+
+((SELECT PlayerID FROM Players WHERE FirstName = 'Dante' AND LastName = 'Knox'),
+ (SELECT StatisticID FROM Statistics WHERE StatisticName = 'Points'),
+ (SELECT GameID FROM Games WHERE Date = '2025-04-08'), 20.00),
+
+((SELECT PlayerID FROM Players WHERE FirstName = 'Dante' AND LastName = 'Knox'),
+ (SELECT StatisticID FROM Statistics WHERE StatisticName = 'Rebounds'),
+ (SELECT GameID FROM Games WHERE Date = '2025-04-08'), 12.00),
+
+((SELECT PlayerID FROM Players WHERE FirstName = 'Alexis' AND LastName = 'Tran'),
+ (SELECT StatisticID FROM Statistics WHERE StatisticName = 'Assists'),
+ (SELECT GameID FROM Games WHERE Date = '2025-04-15'), 4.00);
 
 SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
+
