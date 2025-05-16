@@ -9,7 +9,7 @@
       <th>Last Name</th>
       <th>Position</th>
       <th>Skill Level</th>
-      <th>Actions</th>
+      <th colspan="2">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -20,11 +20,17 @@
       <td>{{this.LastName}}</td>
       <td>{{this.Position}}</td>
       <td>{{this.SkillLevel}}</td>
-      <td>
+      <td class="snug">
         <form method="POST" action="/players/delete">
           <input type="hidden" name="PlayerID" value="{{this.PlayerID}}" />
           <button type="submit">Delete</button>
         </form>
+	  </td>
+      <td class="snug">
+        <form method="POST" action="/players/update">
+          <input type="hidden" name="PlayerID" value="{{this.PlayerID}}" />
+          <button type="submit">Update</button>
+		</form>
       </td>
     </tr>
     {{/each}}

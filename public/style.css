@@ -25,6 +25,17 @@ th, td {
     text-align: center;
 }
 
+.snug {
+	padding: 0;
+	white-space: nowrap;
+	width: 1%;
+}
+
+td form {
+	margin: 10px;
+	padding: 0;
+}
+
 th {
     background-color: #1D428A; /* NBA blue */
     color: white;

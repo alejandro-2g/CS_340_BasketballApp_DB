@@ -5,6 +5,7 @@
       <th>Statistic ID</th>
       <th>Name</th>
       <th>Description</th>
+	  <th colspan="2">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -13,6 +14,18 @@
       <td>{{this.StatisticID}}</td>
       <td>{{this.StatisticName}}</td>
       <td>{{this.Description}}</td>
+      <td class="snug">
+        <form method="POST" action="/playerstatistics/delete">
+          <input type="hidden" name="PlayerStatisticID" value="{{this.PlayerStatisticID}}" />
+          <button type="submit">Delete</button>
+        </form>
+	  </td>
+      <td class="snug">
+        <form method="POST" action="/playerstatistics/update">
+          <input type="hidden" name="PlayerStatisticID" value="{{this.PlayerStatisticID}}" />
+          <button type="submit">Update</button>
+		</form>
+      </td>
     </tr>
     {{/each}}
   </tbody>

@@ -9,6 +9,7 @@
       <th>Team B</th>
       <th>Score A</th>
       <th>Score B</th>
+      <th colspan="2">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -21,6 +22,18 @@
       <td>{{this.TeamBID}}</td>
       <td>{{this.ScoreA}}</td>
       <td>{{this.ScoreB}}</td>
+      <td class="snug">
+        <form method="POST" action="/games/delete">
+          <input type="hidden" name="GameID" value="{{this.GameID}}" />
+          <button type="submit">Delete</button>
+        </form>
+	  </td>
+      <td class="snug">
+        <form method="POST" action="/games/update">
+          <input type="hidden" name="GameID" value="{{this.GameID}}" />
+          <button type="submit">Update</button>
+		</form>
+      </td>
     </tr>
     {{/each}}
   </tbody>
