@@ -1,0 +1,4 @@
+# To allow each of us to use our own credentials
+database/db-connector.js
+# package.lock and package.json should be sufficient
+node_modules/
