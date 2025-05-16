@@ -1,21 +1,20 @@
-<h1>Team Players</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Team ID</th>
-      <th>Player ID</th>
-      <th>Jersey Number</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each teamplayers}}
-    <tr>
-      <td>{{this.TeamID}}</td>
-      <td>{{this.PlayerID}}</td>
-      <td>{{this.JerseyNumber}}</td>
-    </tr>
-    {{/each}}
-  </tbody>
+<h2>Team Players</h2>
+
+<table border="1" cellpadding="8">
+    <thead>
+        <tr>
+            <th>Team Name</th>
+            <th>Player Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each teamplayers}}
+            <tr>
+                <td>{{this.TeamName}}</td>
+                <td>{{this.PlayerName}}</td>
+            </tr>
+        {{/each}}
+    </tbody>
 </table>
 
 <h2>Add Player to Team</h2>

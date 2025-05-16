@@ -84,6 +84,27 @@ app.get('/playerstatistics', async function (req, res) {
     }
 });
 
+//for team players
+app.get('/teamplayers', async function (req, res) {
+    console.log("GET /teamplayers route hit");  
+    try {
+        const query = `
+            SELECT 
+                t.TeamName,
+                CONCAT(p.FirstName, ' ', p.LastName) AS PlayerName
+            FROM TeamPlayers tp
+            JOIN Teams t ON tp.TeamID = t.TeamID
+            JOIN Players p ON tp.PlayerID = p.PlayerID
+            ORDER BY t.TeamName, PlayerName;
+        `;
+        const [teamplayers] = await db.query(query);
+        res.render('teamplayers', { teamplayers });
+    } catch (err) {
+        console.error('Error loading TeamPlayers page:', err);
+        res.status(500).send('Error loading TeamPlayers page');
+    }
+});
+
 
 
 
