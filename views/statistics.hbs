@@ -15,14 +15,14 @@
       <td>{{this.StatisticName}}</td>
       <td>{{this.Description}}</td>
       <td class="snug">
-        <form method="POST" action="/playerstatistics/delete">
-          <input type="hidden" name="PlayerStatisticID" value="{{this.PlayerStatisticID}}" />
+        <form method="POST" action="/statistics/delete">
+          <input type="hidden" name="StatisticID" value="{{this.StatisticID}}" />
           <button type="submit">Delete</button>
         </form>
 	  </td>
       <td class="snug">
-        <form method="POST" action="/playerstatistics/update">
-          <input type="hidden" name="PlayerStatisticID" value="{{this.PlayerStatisticID}}" />
+        <form method="POST" action="/statistics/update">
+          <input type="hidden" name="StatisticID" value="{{this.StatisticID}}" />
           <button type="submit">Update</button>
 		</form>
       </td>
