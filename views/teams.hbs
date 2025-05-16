@@ -5,7 +5,7 @@
       <th>Team ID</th>
       <th>Team Name</th>
       <th>Coach Name</th>
-      <th>Actions</th>
+      <th colspan="2">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -14,11 +14,17 @@
       <td>{{this.TeamID}}</td>
       <td>{{this.TeamName}}</td>
       <td>{{this.CoachName}}</td>
-      <td>
+      <td class="snug">
         <form method="POST" action="/teams/delete">
           <input type="hidden" name="TeamID" value="{{this.TeamID}}" />
           <button type="submit">Delete</button>
         </form>
+	  </td>
+      <td class="snug">
+        <form method="POST" action="/teams/update">
+          <input type="hidden" name="TeamID" value="{{this.TeamID}}" />
+          <button type="submit">Update</button>
+		</form>
       </td>
     </tr>
     {{/each}}
