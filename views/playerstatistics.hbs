@@ -10,26 +10,30 @@
     </tr>
   </thead>
   <tbody>
-    {{#each playerstatistics}}
+     {{#each playerstatistics}}
     <tr>
-      <td>{{this.PlayerID}}</td>
-      <td>{{this.StatisticID}}</td>
-      <td>{{this.GameID}}</td>
+      <td>{{this.PlayerName}}</td>
+      <td>{{this.StatName}}</td>
+      <td>{{this.GameDate}}</td>
       <td>{{this.ValueOfStatistic}}</td>
       <td class="snug">
         <form method="POST" action="/playerstatistics/delete">
-          <input type="hidden" name="PlayerStatisticID" value="{{this.PlayerStatisticID}}" />
+          <input type="hidden" name="PlayerID" value="{{this.PlayerID}}" />
+          <input type="hidden" name="StatisticID" value="{{this.StatisticID}}" />
+          <input type="hidden" name="GameID" value="{{this.GameID}}" />
           <button type="submit">Delete</button>
         </form>
-	  </td>
+      </td>
       <td class="snug">
         <form method="POST" action="/playerstatistics/update">
-          <input type="hidden" name="PlayerStatisticID" value="{{this.PlayerStatisticID}}" />
+          <input type="hidden" name="PlayerID" value="{{this.PlayerID}}" />
+          <input type="hidden" name="StatisticID" value="{{this.StatisticID}}" />
+          <input type="hidden" name="GameID" value="{{this.GameID}}" />
           <button type="submit">Update</button>
-		</form>
+        </form>
       </td>
     </tr>
-    {{/each}}
+  {{/each}}
   </tbody>
 </table>
 

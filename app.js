@@ -76,12 +76,27 @@ app.get('/statistics', async function (req, res) {
 
 //for playerstatistics
 app.get('/playerstatistics', async function (req, res) {
-    try {
-        const [playerstatistics] = await db.query('SELECT * FROM PlayerStatistics;');
-        res.render('playerstatistics', { playerstatistics });
-    } catch (err) {
-        res.status(500).send('Error loading Games page');
-    }
+  try {
+    const [playerstatistics] = await db.query(`
+      SELECT 
+        ps.PlayerID,
+        ps.StatisticID,
+        ps.GameID,
+        CONCAT(p.FirstName, ' ', p.LastName) AS PlayerName,
+        s.Statisticname AS StatName,
+        g.Date AS GameDate,
+        ps.ValueOfStatistic
+      FROM PlayerStatistics ps
+      JOIN Players p ON ps.PlayerID = p.PlayerID
+      JOIN Statistics s ON ps.StatisticID = s.StatisticID
+      JOIN Games g ON ps.GameID = g.GameID;
+    `);
+
+    res.render('playerstatistics', { playerstatistics });
+  } catch (err) {
+     console.error('ERROR in /playerstatistics route:', err);
+    res.status(500).send('Error loading Player Statistics page');
+  }
 });
 
 //for team players
