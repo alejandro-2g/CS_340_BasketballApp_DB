@@ -120,6 +120,18 @@ app.get('/teamplayers', async function (req, res) {
     }
 });
 
+// for reset button
+app.get('/reset', async function (req, res) {
+  try {
+    await db.query('CALL ResetPickupDB()');
+    res.redirect('/'); // goes to home page
+  } catch (err) {
+    console.error('Error running ResetPickupDB:', err);
+    res.status(500).send('Error resetting database');
+  }
+});
+
+
 
 
 
