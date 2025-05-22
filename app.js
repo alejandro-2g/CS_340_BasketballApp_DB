@@ -131,6 +131,35 @@ app.get('/reset', async function (req, res) {
   }
 });
 
+// for the add player form in players table
+app.post('/players/add', async (req, res) => {
+  try {
+    const { FirstName, LastName, Position, SkillLevel } = req.body;
+    await db.query(
+      'CALL sp_CreatePlayer(?, ?, ?, ?)',
+      [FirstName, LastName, Position, SkillLevel]
+    );
+    res.redirect('/players');
+  } catch (err) {
+    console.error("Error adding player:", err);
+    res.status(500).send("Error adding player");
+  }
+});
+
+// for the delete player form
+app.post('/players/delete', async (req, res) => {
+    try {
+        const { PlayerID } = req.body;
+        await db.query('CALL sp_DeletePlayer(?)', [PlayerID]);
+        res.redirect('/players');
+    } catch (err) {
+        console.error('Error deleting player:', err);
+        res.status(500).send('Error deleting player');
+    }
+});
+
+
+
 
 
 
