@@ -82,14 +82,19 @@ button:hover {
 
 /* Navigation Bar */
 nav {
+	display: inline-block;
     background-color: #1D428A; /* NBA blue */
     padding: 16px;
+	width: 100%
 }
 
 nav span {
 	color: white;
 	font-weight: bold;
-	font-size: 20px;
+}
+
+nav * {
+	float: left;
 }
 
 a {
@@ -97,13 +102,32 @@ a {
     margin-left: 16px;
     text-decoration: none;
     font-weight: bold;
+	text-align: center;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
+nav form {
+	margin: 0;
+	padding: 0;
+	float: right;
+}
+
+.right-nav {
+	float: right;
+	margin-left: 0;
+	margin-right: 32px;
+}
+
+.warning {
+    background-color: #C8102E; /* NBA red */
+	font-weight: normal;
+}
+
 /* Homepage text */
 .homepageDescription {
     margin-left: 32px;
 }
+
