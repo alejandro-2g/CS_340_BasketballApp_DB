@@ -3,6 +3,11 @@
 -- Author: Alejandro Cervantes Flores & Nora Jacobi
 -- Description: SQL queries and Example Data for Basketball Club Management
 
+DROP PROCEDURE IF EXISTS ResetPickupDB;
+DELIMITER //
+
+CREATE PROCEDURE ResetPickupDB()
+BEGIN
 
 SET FOREIGN_KEY_CHECKS=0;
 SET AUTOCOMMIT = 0;
@@ -143,3 +148,6 @@ INSERT INTO PlayerStatistics (PlayerID, StatisticID, GameID, ValueOfStatistic) V
 SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
+END//
+
+DELIMITER ;
