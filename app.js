@@ -16,7 +16,7 @@ const db = require('./database/db-connector');
 // Handlebars
 const { engine } = require('express-handlebars'); // Import express-handlebars engine
 app.engine('.hbs', engine({ extname: '.hbs' })); // Create instance of handlebars
-app.set('view engine', '.hbs'); // Use handlebars engine for *.hbs files.
+app.set('view engine', '.hbs'); 
 
 // ########################################
 // ########## ROUTE HANDLERS
@@ -131,12 +131,19 @@ app.get('/reset', async function (req, res) {
   }
 });
 
+// ##################################################
+// ################# Player CUD ######################
+
 // for the add player form in players table
 app.post('/players/add', async (req, res) => {
   try {
     const { FirstName, LastName, Position, SkillLevel } = req.body;
+
+    // Use a session variable to capture the OUT param
+    await db.query('SET @newPlayerID = 0');
+
     await db.query(
-      'CALL sp_CreatePlayer(?, ?, ?, ?)',
+      'CALL sp_CreatePlayer(?, ?, ?, ?, @newPlayerID)',
       [FirstName, LastName, Position, SkillLevel]
     );
     res.redirect('/players');
@@ -158,8 +165,232 @@ app.post('/players/delete', async (req, res) => {
     }
 });
 
+//update player form
+app.post('/players/update', async function (req, res) {
+    const { PlayerID, FirstName, LastName, Position, SkillLevel } = req.body;
+    try {
+        await db.query(
+            'UPDATE Players SET FirstName=?, LastName=?, Position=?, SkillLevel=? WHERE PlayerID=?',
+            [FirstName, LastName, Position, SkillLevel, PlayerID]
+        );
+        res.redirect('/players');
+    } catch (error) {
+        console.error('Error updating player:', error);
+        res.status(500).send('Error updating player');
+    }
+});
+
+// ##################################################
+// ################# Team CUD ######################
+
+// Create a team
+app.post('/teams/add', async (req, res) => {
+  try {
+    const { TeamName, CoachName } = req.body;
+    await db.query('INSERT INTO Teams (TeamName, CoachName) VALUES (?, ?)', [TeamName, CoachName]);
+    res.redirect('/teams');
+  } catch (err) {
+    console.error("Error adding team:", err);
+    res.status(500).send("Error adding team");
+  }
+});
+
+// Update a team
+app.post('/teams/update', async (req, res) => {
+  try {
+    const { TeamID, TeamName, CoachName } = req.body;
+    await db.query('UPDATE Teams SET TeamName=?, CoachName=? WHERE TeamID=?', [TeamName, CoachName, TeamID]);
+    res.redirect('/teams');
+  } catch (err) {
+    console.error("Error updating team:", err);
+    res.status(500).send("Error updating team");
+  }
+});
+
+// Delete a team
+app.post('/teams/delete', async (req, res) => {
+  try {
+    const { TeamID } = req.body;
+    await db.query('DELETE FROM Teams WHERE TeamID=?', [TeamID]);
+    res.redirect('/teams');
+  } catch (err) {
+    console.error("Error deleting team:", err);
+    res.status(500).send("Error deleting team");
+  }
+});
+// ##################################################
+// ################# Games CUD ######################
+
+// Create a game
+app.post('/games/add', async (req, res) => {
+  try {
+    const { Date, Location, TeamAID, TeamBID, ScoreA, ScoreB } = req.body;
+    await db.query('INSERT INTO Games (Date, Location, TeamAID, TeamBID, ScoreA, ScoreB) VALUES (?, ?, ?, ?, ?, ?)', [Date, Location, TeamAID, TeamBID, ScoreA, ScoreB]);
+    res.redirect('/games');
+  } catch (err) {
+    console.error("Error adding game:", err);
+    res.status(500).send("Error adding game");
+  }
+});
+
+// Update a game
+app.post('/games/update', async (req, res) => {
+  try {
+    const { GameID, Date, Location, TeamAID, TeamBID, ScoreA, ScoreB } = req.body;
+    await db.query('UPDATE Games SET Date=?, Location=?, TeamAID=?, TeamBID=?, ScoreA=?, ScoreB=? WHERE GameID=?', [Date, Location, TeamAID, TeamBID, ScoreA, ScoreB, GameID]);
+    res.redirect('/games');
+  } catch (err) {
+    console.error("Error updating game:", err);
+    res.status(500).send("Error updating game");
+  }
+});
+
+// Delete a game
+app.post('/games/delete', async (req, res) => {
+  try {
+    const { GameID } = req.body;
+    await db.query('DELETE FROM Games WHERE GameID=?', [GameID]);
+    res.redirect('/games');
+  } catch (err) {
+    console.error("Error deleting game:", err);
+    res.status(500).send("Error deleting game");
+  }
+});
+
+// ##################################################
+// ################# Statistics CUD ######################
+
+// Create a statistic
+app.post('/statistics/add', async (req, res) => {
+  try {
+    const { StatisticName, Description } = req.body;
+    await db.query('INSERT INTO Statistics (StatisticName, Description) VALUES (?, ?)', [StatisticName, Description]);
+    res.redirect('/statistics');
+  } catch (err) {
+    console.error("Error adding statistic:", err);
+    res.status(500).send("Error adding statistic");
+  }
+});
+
+// Update a statistic
+app.post('/statistics/update', async (req, res) => {
+  try {
+    const { StatisticID, StatisticName, Description } = req.body;
+    await db.query('UPDATE Statistics SET StatisticName=?, Description=? WHERE StatisticID=?', [StatisticName, Description, StatisticID]);
+    res.redirect('/statistics');
+  } catch (err) {
+    console.error("Error updating statistic:", err);
+    res.status(500).send("Error updating statistic");
+  }
+});
+
+// Delete a statistic
+app.post('/statistics/delete', async (req, res) => {
+  try {
+    const { StatisticID } = req.body;
+    await db.query('DELETE FROM Statistics WHERE StatisticID=?', [StatisticID]);
+    res.redirect('/statistics');
+  } catch (err) {
+    console.error("Error deleting statistic:", err);
+    res.status(500).send("Error deleting statistic");
+  }
+});
+
+// ##################################################
+// ########## Player Statistics CUD #################
+
+// Create a player statistic entry
+app.post('/playerstatistics/add', async (req, res) => {
+  try {
+    const { PlayerID, StatisticID, GameID, ValueOfStatistic } = req.body;
+    await db.query('INSERT INTO PlayerStatistics (PlayerID, StatisticID, GameID, ValueOfStatistic) VALUES (?, ?, ?, ?)', [PlayerID, StatisticID, GameID, ValueOfStatistic]);
+    res.redirect('/playerstatistics');
+  } catch (err) {
+    console.error("Error adding player statistic:", err);
+    res.status(500).send("Error adding player statistic");
+  }
+});
+
+// Update a player statistic entry
+app.post('/playerstatistics/update', async (req, res) => {
+  try {
+    const { PlayerID, StatisticID, GameID, ValueOfStatistic } = req.body;
+    await db.query('UPDATE PlayerStatistics SET ValueOfStatistic=? WHERE PlayerID=? AND StatisticID=? AND GameID=?', [ValueOfStatistic, PlayerID, StatisticID, GameID]);
+    res.redirect('/playerstatistics');
+  } catch (err) {
+    console.error("Error updating player statistic:", err);
+    res.status(500).send("Error updating player statistic");
+  }
+});
+
+// Delete a player statistic entry
+app.post('/playerstatistics/delete', async (req, res) => {
+  try {
+    const { PlayerID, StatisticID, GameID } = req.body;
+    await db.query('DELETE FROM PlayerStatistics WHERE PlayerID=? AND StatisticID=? AND GameID=?', [PlayerID, StatisticID, GameID]);
+    res.redirect('/playerstatistics');
+  } catch (err) {
+    console.error("Error deleting player statistic:", err);
+    res.status(500).send("Error deleting player statistic");
+  }
+});
 
 
+// ##################################################
+// ########## Team Player CUD #######################
+
+// Add a player to a team
+app.post('/teamplayers/add', (req, res) => {
+  const { TeamID, PlayerID, JerseyNumber } = req.body;
+
+  const query = `
+    INSERT INTO TeamPlayers (TeamID, PlayerID, JerseyNumber)
+    VALUES (?, ?, ?)
+  `;
+  db.query(query, [TeamID, PlayerID, JerseyNumber], (err, result) => {
+    if (err) {
+      console.error('Error adding player to team:', err);
+      return res.sendStatus(500);
+    }
+    res.redirect('/teamplayers');
+  });
+});
+
+// Update a team player 
+app.post('/teamplayers/update', (req, res) => {
+  const { TeamPlayerID, TeamID, PlayerID, JerseyNumber } = req.body;
+
+  // Example logic: if you want to update multiple fields (like JerseyNumber)
+  const query = `
+    UPDATE TeamPlayers
+    SET JerseyNumber = ?
+    WHERE TeamPlayerID = ?
+  `;
+  db.query(query, [JerseyNumber, TeamPlayerID], (err, result) => {
+    if (err) {
+      console.error('Error updating team player:', err);
+      return res.sendStatus(500);
+    }
+    res.redirect('/teamplayers');
+  });
+});
+
+// Delete a team player 
+app.post('/teamplayers/delete', (req, res) => {
+  const { TeamPlayerID } = req.body;
+
+  const query = `
+    DELETE FROM TeamPlayers
+    WHERE TeamPlayerID = ?
+  `;
+  db.query(query, [TeamPlayerID], (err, result) => {
+    if (err) {
+      console.error('Error deleting team player:', err);
+      return res.sendStatus(500);
+    }
+    res.redirect('/teamplayers');
+  });
+});
 
 
 

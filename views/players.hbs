@@ -28,7 +28,7 @@
 	  </td>
       <td class="snug">
         <form method="POST" action="/players/update">
-          <input type="hidden" name="PlayerID" value="{{this.PlayerID}}" />
+          <input type="hidden" name="PlayerID, FirstName, LastName, Position, SkillLevel" value="{{this.PlayerID}}" />
           <button type="submit">Update</button>
 		</form>
       </td>
@@ -62,3 +62,14 @@
 
   <button type="submit">Add Player</button>
 </form>
+
+<h2>Update Player</h2>
+<form method="POST" action="/players/update">
+  <input name="PlayerID" placeholder="Player ID" required />
+  <input name="FirstName" placeholder="First Name" required />
+  <input name="LastName" placeholder="Last Name" required />
+  <input name="Position" placeholder="Position (PG, SG, SF, PF, C)" required />
+  <input name="SkillLevel" placeholder="Skill Level (1-5)" required />
+  <button type="submit">Update Player</button>
+</form>
+
