@@ -2,16 +2,14 @@
 <table>
   <thead>
     <tr>
-      <th>Statistic ID</th>
       <th>Name</th>
       <th>Description</th>
-	  <th colspan="2">Actions</th>
+	  <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     {{#each statistics}}
     <tr>
-      <td>{{this.StatisticID}}</td>
       <td>{{this.StatisticName}}</td>
       <td>{{this.Description}}</td>
       <td class="snug">
@@ -20,12 +18,6 @@
           <button type="submit">Delete</button>
         </form>
 	  </td>
-      <td class="snug">
-        <form method="POST" action="/statistics/update">
-          <input type="hidden" name="StatisticID" value="{{this.StatisticID}}" />
-          <button type="submit">Update</button>
-		</form>
-      </td>
     </tr>
     {{/each}}
   </tbody>
@@ -41,7 +33,12 @@
 <h2>Update a Statistic</h2>
 <form method="POST" action="/statistics/update">
   <div style="display: flex; gap: 10px;">
-    <input name="StatisticID" placeholder="Statistic ID" required />
+    <label for="statisticSelect">Select a statistic</label>
+    <select name="StatisticID" id="StatisticSelect" required>
+    {{#each statistics}}
+      <option value="{{this.StatisticID}}">{{this.StatisticName}}</option>
+    {{/each}}
+    </select>
     <input name="StatisticName" placeholder="New Statistic Name" required />
     <input name="Description" placeholder="New Description" required />
     <button type="submit" class="btn btn-warning">Update Statistic</button>

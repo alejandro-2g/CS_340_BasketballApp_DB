@@ -5,7 +5,8 @@
         <tr>
             <th>Team Name</th>
             <th>Player Name</th>
-             <th colspan="2">Actions</th>
+			<th>Jersey Number</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -13,18 +14,13 @@
             <tr>
                 <td>{{this.TeamName}}</td>
                 <td>{{this.PlayerName}}</td>
+				<td>{{this.JerseyNumber}}</td>
   				<td class="snug">
 					<form method="POST" action="/teamplayers/delete">
-						<input type="hidden" name="TeamPlayerID" value="{{this.TeamPlayerID}}" />
+						<input type="hidden" name="TeamPlayerID" value="{{this.TeamID}} {{this.PlayerID}}" />
 						<button type="submit">Delete</button>
 					</form>
 			  	</td>
-			  	<td class="snug">
-					<form method="POST" action="/teamplayers/update">
-						<input type="hidden" name="TeamPlayerID" value="{{this.TeamPlayerID}}" />
-						<button type="submit">Update</button>
-					</form>
-				</td>
             </tr>
         {{/each}}
     </tbody>
@@ -35,15 +31,21 @@
   <div style="display: flex; gap: 10px;">
     <input name="TeamName" placeholder="Team Name" required />
     <input name="PlayerName" placeholder="Player Name" required />
+	<input name="JerseyNumber" placeholder="Jersey Number" />
     <button type="submit" class="btn btn-primary">Add</button>
   </div>
 </form>
 
-<h2>Update Player in Team</h2>
+<h2>Update Jersey Number</h2>
 <form method="POST" action="/teamplayers/update">
   <div style="display: flex; gap: 10px;">
-    <input name="TeamName" placeholder="Team Name" required />
-    <input name="PlayerName" placeholder="Player Name" required />
+    <label for="PairSelect">Select a team-player pairing</label>
+    <select name="TeamPlayerID" id="PairSelect" required>
+    {{#each teamplayers}}
+      <option value="{{this.TeamID}} {{this.PlayerID}}">{{this.TeamName}}/{{this.PlayerName}}</option>
+    {{/each}}
+    </select>
+    <input name="JerseyNumber" placeholder="Jersey Number" required />
     <button type="submit" class="btn btn-warning">Update</button>
   </div>
 </form>

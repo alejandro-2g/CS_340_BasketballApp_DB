@@ -2,16 +2,14 @@
 <table>
   <thead>
     <tr>
-      <th>Team ID</th>
       <th>Team Name</th>
       <th>Coach Name</th>
-      <th colspan="2">Actions</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     {{#each teams}}
     <tr>
-      <td>{{this.TeamID}}</td>
       <td>{{this.TeamName}}</td>
       <td>{{this.CoachName}}</td>
       <td class="snug">
@@ -20,12 +18,6 @@
           <button type="submit">Delete</button>
         </form>
 	  </td>
-      <td class="snug">
-        <form method="POST" action="/teams/update">
-          <input type="hidden" name="TeamID" value="{{this.TeamID}}" />
-          <button type="submit">Update</button>
-		</form>
-      </td>
     </tr>
     {{/each}}
   </tbody>
@@ -40,7 +32,12 @@
 
 <h2>Update a Team</h2>
 <form method="POST" action="/teams/update">
-  <input name="TeamID" placeholder="Team ID (required)" required />
+  <label for="TeamSelect">Select a team</label>
+  <select name="TeamID" id="TeamSelect" required>
+  {{#each teams}}
+    <option value="{{this.TeamID}}">{{this.TeamName}}</option>
+  {{/each}}
+  </select>
   <input name="TeamName" placeholder="New Team Name" required />
   <input name="CoachName" placeholder="New Coach Name" />
   <button type="submit">Update Team</button>

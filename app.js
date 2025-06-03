@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const PORT = 5330 ;
+const PORT = 5331 ;
 
 // Database
 const db = require('./database/db-connector');
@@ -106,7 +106,10 @@ app.get('/teamplayers', async function (req, res) {
         const query = `
             SELECT 
                 t.TeamName,
-                CONCAT(p.FirstName, ' ', p.LastName) AS PlayerName
+                CONCAT(p.FirstName, ' ', p.LastName) AS PlayerName,
+				tp.JerseyNumber,
+				t.TeamID,
+				p.PlayerID
             FROM TeamPlayers tp
             JOIN Teams t ON tp.TeamID = t.TeamID
             JOIN Players p ON tp.PlayerID = p.PlayerID
@@ -397,7 +400,7 @@ app.post('/playerstatistics/delete', async (req, res) => {
 // Add a player to a team
 app.post('/teamplayers/add', async (req, res) => {
   try {
-    const { TeamName, PlayerName } = req.body;
+    const { TeamName, PlayerName, JerseyNumber } = req.body;
 
     // Find TeamID
     const [teamRows] = await db.query('SELECT TeamID FROM Teams WHERE TeamName = ?', [TeamName]);
@@ -414,7 +417,7 @@ app.post('/teamplayers/add', async (req, res) => {
     const playerID = playerRows[0].PlayerID;
 
     // Insert into TeamPlayers
-    await db.query('INSERT INTO TeamPlayers (TeamID, PlayerID) VALUES (?, ?)', [teamID, playerID]);
+    await db.query('INSERT INTO TeamPlayers (TeamID, PlayerID, JerseyNumber) VALUES (?, ?, ?)', [teamID, playerID, JerseyNumber]);
 
     res.redirect('/teamplayers');
   } catch (err) {
@@ -423,6 +426,23 @@ app.post('/teamplayers/add', async (req, res) => {
   }
 });
 
+
+
+app.post('/teamplayers/update', async (req, res) => {
+  const { TeamPlayerID, JerseyNumber } = req.body;
+
+  const parts = TeamPlayerID.split(' ');
+  const TeamID = parts[0] || '';
+  const PlayerID = parts[1] || '';
+
+  try {
+    await db.query('UPDATE TeamPlayers SET JerseyNumber=? WHERE TeamID=? and PlayerID=?', [JerseyNumber, TeamID, PlayerID]);
+    res.redirect('/teamplayers');
+  } catch (err) {
+      console.error('Error deleting team player:', err);
+      return res.sendStatus(500);
+  }
+});
 
 app.post('/teamplayers/update-names', async (req, res) => {
   const { CurrentTeamName, NewTeamName, CurrentPlayerName, NewPlayerName } = req.body;
@@ -456,20 +476,20 @@ app.post('/teamplayers/update-names', async (req, res) => {
 
 
 // Delete a team player 
-app.post('/teamplayers/delete', (req, res) => {
+app.post('/teamplayers/delete', async (req, res) => {
   const { TeamPlayerID } = req.body;
 
-  const query = `
-    DELETE FROM TeamPlayers
-    WHERE TeamPlayerID = ?
-  `;
-  db.query(query, [TeamPlayerID], (err, result) => {
-    if (err) {
+  const parts = TeamPlayerID.split(' ');
+  const TeamID = parts[0] || '';
+  const PlayerID = parts[1] || '';
+
+  try {
+    await db.query('DELETE FROM TeamPlayers WHERE TeamID = ? and PlayerID = ?', [TeamID, PlayerID]);
+    res.redirect('/teamplayers');
+  } catch (err) {
       console.error('Error deleting team player:', err);
       return res.sendStatus(500);
-    }
-    res.redirect('/teamplayers');
-  });
+  }
 });
 
 
