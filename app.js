@@ -299,11 +299,38 @@ app.post('/statistics/delete', async (req, res) => {
 // ##################################################
 // ########## Player Statistics CUD #################
 
-// Create a player statistic entry
+
+// add player statistic
 app.post('/playerstatistics/add', async (req, res) => {
+  const { PlayerName, StatisticName, GameID, ValueOfStatistic } = req.body;
+
   try {
-    const { PlayerID, StatisticID, GameID, ValueOfStatistic } = req.body;
-    await db.query('INSERT INTO PlayerStatistics (PlayerID, StatisticID, GameID, ValueOfStatistic) VALUES (?, ?, ?, ?)', [PlayerID, StatisticID, GameID, ValueOfStatistic]);
+    // Find PlayerID
+    const [playerRows] = await db.query(
+      'SELECT PlayerID FROM Players WHERE CONCAT(FirstName, " ", LastName) = ?',
+      [PlayerName]
+    );
+    if (playerRows.length === 0) {
+      return res.status(400).send('Player not found.');
+    }
+    const playerID = playerRows[0].PlayerID;
+
+    // Find StatisticID
+    const [statRows] = await db.query(
+      'SELECT StatisticID FROM Statistics WHERE StatisticName = ?',
+      [StatisticName]
+    );
+    if (statRows.length === 0) {
+      return res.status(400).send('Statistic not found.');
+    }
+    const statisticID = statRows[0].StatisticID;
+
+    // Insert into PlayerStatistics
+    await db.query(
+      'INSERT INTO PlayerStatistics (PlayerID, StatisticID, GameID, ValueOfStatistic) VALUES (?, ?, ?, ?)',
+      [playerID, statisticID, GameID, ValueOfStatistic]
+    );
+
     res.redirect('/playerstatistics');
   } catch (err) {
     console.error("Error adding player statistic:", err);
@@ -311,17 +338,45 @@ app.post('/playerstatistics/add', async (req, res) => {
   }
 });
 
-// Update a player statistic entry
+
+
 app.post('/playerstatistics/update', async (req, res) => {
+  const { CurrentPlayerName, CurrentStatisticName, GameID, ValueOfStatistic } = req.body;
+
   try {
-    const { PlayerID, StatisticID, GameID, ValueOfStatistic } = req.body;
-    await db.query('UPDATE PlayerStatistics SET ValueOfStatistic=? WHERE PlayerID=? AND StatisticID=? AND GameID=?', [ValueOfStatistic, PlayerID, StatisticID, GameID]);
+    // Find PlayerID
+    const [playerRows] = await db.query(
+      'SELECT PlayerID FROM Players WHERE CONCAT(FirstName, " ", LastName) = ?',
+      [CurrentPlayerName]
+    );
+    if (playerRows.length === 0) {
+      return res.status(400).send('Player not found.');
+    }
+    const playerID = playerRows[0].PlayerID;
+
+    // Find StatisticID
+    const [statRows] = await db.query(
+      'SELECT StatisticID FROM Statistics WHERE StatisticName = ?',
+      [CurrentStatisticName]
+    );
+    if (statRows.length === 0) {
+      return res.status(400).send('Statistic not found.');
+    }
+    const statisticID = statRows[0].StatisticID;
+
+    // Update PlayerStatistics entry
+    await db.query(
+      'UPDATE PlayerStatistics SET ValueOfStatistic = ? WHERE PlayerID = ? AND StatisticID = ? AND GameID = ?',
+      [ValueOfStatistic, playerID, statisticID, GameID]
+    );
+
     res.redirect('/playerstatistics');
   } catch (err) {
     console.error("Error updating player statistic:", err);
     res.status(500).send("Error updating player statistic");
   }
 });
+
 
 // Delete a player statistic entry
 app.post('/playerstatistics/delete', async (req, res) => {
@@ -340,40 +395,65 @@ app.post('/playerstatistics/delete', async (req, res) => {
 // ########## Team Player CUD #######################
 
 // Add a player to a team
-app.post('/teamplayers/add', (req, res) => {
-  const { TeamID, PlayerID, JerseyNumber } = req.body;
+app.post('/teamplayers/add', async (req, res) => {
+  try {
+    const { TeamName, PlayerName } = req.body;
 
-  const query = `
-    INSERT INTO TeamPlayers (TeamID, PlayerID, JerseyNumber)
-    VALUES (?, ?, ?)
-  `;
-  db.query(query, [TeamID, PlayerID, JerseyNumber], (err, result) => {
-    if (err) {
-      console.error('Error adding player to team:', err);
-      return res.sendStatus(500);
+    // Find TeamID
+    const [teamRows] = await db.query('SELECT TeamID FROM Teams WHERE TeamName = ?', [TeamName]);
+    if (teamRows.length === 0) {
+      return res.status(400).send('Team not found.');
     }
+    const teamID = teamRows[0].TeamID;
+
+    // Find PlayerID
+    const [playerRows] = await db.query('SELECT PlayerID FROM Players WHERE CONCAT(FirstName, " ", LastName) = ?', [PlayerName]);
+    if (playerRows.length === 0) {
+      return res.status(400).send('Player not found.');
+    }
+    const playerID = playerRows[0].PlayerID;
+
+    // Insert into TeamPlayers
+    await db.query('INSERT INTO TeamPlayers (TeamID, PlayerID) VALUES (?, ?)', [teamID, playerID]);
+
     res.redirect('/teamplayers');
-  });
+  } catch (err) {
+    console.error('Error adding player to team:', err);
+    res.status(500).send('Error adding player to team');
+  }
 });
 
-// Update a team player 
-app.post('/teamplayers/update', (req, res) => {
-  const { TeamPlayerID, TeamID, PlayerID, JerseyNumber } = req.body;
 
-  // Example logic: if you want to update multiple fields (like JerseyNumber)
-  const query = `
-    UPDATE TeamPlayers
-    SET JerseyNumber = ?
-    WHERE TeamPlayerID = ?
-  `;
-  db.query(query, [JerseyNumber, TeamPlayerID], (err, result) => {
-    if (err) {
-      console.error('Error updating team player:', err);
-      return res.sendStatus(500);
-    }
+app.post('/teamplayers/update-names', async (req, res) => {
+  const { CurrentTeamName, NewTeamName, CurrentPlayerName, NewPlayerName } = req.body;
+
+  try {
+    // Update the team name
+    await db.query('UPDATE Teams SET TeamName = ? WHERE TeamName = ?', [NewTeamName, CurrentTeamName]);
+
+    // Split new player name into first and last name (assuming names are separated by a space)
+    const newPlayerNameParts = NewPlayerName.split(' ');
+    const newFirstName = newPlayerNameParts[0] || '';
+    const newLastName = newPlayerNameParts[1] || '';
+
+    const currentPlayerNameParts = CurrentPlayerName.split(' ');
+    const currentFirstName = currentPlayerNameParts[0] || '';
+    const currentLastName = currentPlayerNameParts[1] || '';
+
+    // Update the player name
+    await db.query(
+      'UPDATE Players SET FirstName = ?, LastName = ? WHERE FirstName = ? AND LastName = ?',
+      [newFirstName, newLastName, currentFirstName, currentLastName]
+    );
+
     res.redirect('/teamplayers');
-  });
+  } catch (err) {
+    console.error('Error updating names:', err);
+    res.status(500).send('Error updating team or player names');
+  }
 });
+
+
 
 // Delete a team player 
 app.post('/teamplayers/delete', (req, res) => {

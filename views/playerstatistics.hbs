@@ -37,11 +37,23 @@
   </tbody>
 </table>
 
+
 <h2>Add Player Statistic</h2>
-<form method="POST" action="/playerstats/add">
-  <input name="PlayerID" placeholder="Player ID" required />
-  <input name="StatisticID" placeholder="Statistic ID" required />
-  <input name="GameID" placeholder="Game ID" required />
-  <input name="ValueOfStatistic" placeholder="Value" required />
-  <button type="submit">Add Stat</button>
+<form method="POST" action="/playerstatistics/add">
+  <div style="display: flex; gap: 10px;">
+    <input name="PlayerName" placeholder="Player Name" required />
+    <input name="StatisticName" placeholder="Statistic Name" required />
+    <input name="GameID" placeholder="Game ID" required />
+    <input name="ValueOfStatistic" placeholder="Value" required />
+    <button type="submit" class="btn btn-primary">Add Stat</button>
+  </div>
 </form>
+
+<form method="POST" action="/playerstatistics/update" style="display: flex; gap: 5px;">
+  <input type="hidden" name="CurrentPlayerName" value="{{this.PlayerName}}" />
+  <input type="hidden" name="CurrentStatisticName" value="{{this.StatisticName}}" />
+  <input type="hidden" name="GameID" value="{{this.GameID}}" />
+  <input name="ValueOfStatistic" placeholder="New Value" required />
+  <button type="submit" class="btn btn-warning">Update</button>
+</form>
+

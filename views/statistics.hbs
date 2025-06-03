@@ -37,3 +37,14 @@
   <input name="Description" placeholder="Description" />
   <button type="submit">Add Statistic</button>
 </form>
+
+<h2>Update a Statistic</h2>
+<form method="POST" action="/statistics/update">
+  <div style="display: flex; gap: 10px;">
+    <input name="StatisticID" placeholder="Statistic ID" required />
+    <input name="StatisticName" placeholder="New Statistic Name" required />
+    <input name="Description" placeholder="New Description" required />
+    <button type="submit" class="btn btn-warning">Update Statistic</button>
+  </div>
+</form>
+

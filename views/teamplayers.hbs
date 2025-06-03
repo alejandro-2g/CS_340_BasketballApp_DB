@@ -32,11 +32,22 @@
 
 <h2>Add Player to Team</h2>
 <form method="POST" action="/teamplayers/add">
-  <input name="TeamID" placeholder="Team ID" required />
-  <input name="PlayerID" placeholder="Player ID" required />
-  <input name="JerseyNumber" placeholder="Jersey #" />
-  <button type="submit">Add</button>
+  <div style="display: flex; gap: 10px;">
+    <input name="TeamName" placeholder="Team Name" required />
+    <input name="PlayerName" placeholder="Player Name" required />
+    <button type="submit" class="btn btn-primary">Add</button>
+  </div>
 </form>
+
+<h2>Update Player in Team</h2>
+<form method="POST" action="/teamplayers/update">
+  <div style="display: flex; gap: 10px;">
+    <input name="TeamName" placeholder="Team Name" required />
+    <input name="PlayerName" placeholder="Player Name" required />
+    <button type="submit" class="btn btn-warning">Update</button>
+  </div>
+</form>
+
 
 
 
