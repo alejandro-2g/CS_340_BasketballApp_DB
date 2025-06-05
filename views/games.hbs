@@ -2,20 +2,18 @@
 <table>
   <thead>
     <tr>
-      <th>Game ID</th>
       <th>Date</th>
       <th>Location</th>
       <th>Team A</th>
       <th>Team B</th>
       <th>Score A</th>
       <th>Score B</th>
-      <th colspan="2">Actions</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     {{#each games}}
     <tr>
-      <td>{{this.GameID}}</td>
       <td>{{this.Date}}</td>
       <td>{{this.Location}}</td>
       <td>{{this.TeamAName}}</td>
@@ -28,12 +26,6 @@
           <button type="submit">Delete</button>
         </form>
 	  </td>
-      <td class="snug">
-        <form method="POST" action="/games/update">
-          <input type="hidden" name="GameID" value="{{this.GameID}}" />
-          <button type="submit">Update</button>
-		</form>
-      </td>
     </tr>
     {{/each}}
   </tbody>
@@ -59,3 +51,31 @@
   <input name="ScoreB" type="number" placeholder="Team B Score" />
   <button type="submit">Add Game</button>
 </form>
+
+<h2>Update Game Information</h2>
+<form method="POST" action="/games/update">
+  <label for="GameSelect">Select a Game</label>
+  <select name="GameID" id="GameSelect" required>
+  {{#each games}}
+    <option value="{{this.GameID}}">{{this.Date}} {{this.TeamAName}} vs. {{this.TeamBName}}</option>
+  {{/each}}
+  </select>
+  <input name="Date" type="date" required />
+  <input name="Location" placeholder="Location" required />
+  <label for="TeamASelect">Select Team A</label>
+  <select name="TeamAID" id="TeamASelect" required>
+  {{#each teams}}
+    <option value="{{this.TeamID}}">{{this.TeamName}}</option>
+  {{/each}}
+  </select>
+  <label for="TeamBSelect">Select Team B</label>
+  <select name="TeamBID" id="TeamBSelect" required>
+  {{#each teams}}
+    <option value="{{this.TeamID}}">{{this.TeamName}}</option>
+  {{/each}}
+  </select>
+  <input name="ScoreA" type="number" placeholder="Team A Score" />
+  <input name="ScoreB" type="number" placeholder="Team B Score" />
+  <button type="submit">Update Game</button>
+</form>
+
