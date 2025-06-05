@@ -394,7 +394,7 @@ app.post('/playerstatistics/add', async (req, res) => {
     // Insert into PlayerStatistics
     await db.query(
       'INSERT INTO PlayerStatistics (PlayerID, StatisticID, GameID, ValueOfStatistic) VALUES (?, ?, ?, ?)',
-      [PlayerID, StatisticID, GameID, ValueOfStatistic]
+      [PlayerID, statisticID, GameID, ValueOfStatistic]
     );
 
     res.redirect('/playerstatistics');
@@ -407,40 +407,49 @@ app.post('/playerstatistics/add', async (req, res) => {
 
 
 app.post('/playerstatistics/update', async (req, res) => {
-  const { CurrentPlayerName, CurrentStatisticName, GameID, ValueOfStatistic } = req.body;
+	//const { CurrentPlayerName, CurrentStatisticName, GameID, ValueOfStatistic } = req.body;
+	const { PlayerStatisticsID, ValueOfStatistic } = req.body;
 
-  try {
-    // Find PlayerID
-    const [playerRows] = await db.query(
-      'SELECT PlayerID FROM Players WHERE CONCAT(FirstName, " ", LastName) = ?',
-      [CurrentPlayerName]
-    );
-    if (playerRows.length === 0) {
-      return res.status(400).send('Player not found.');
-    }
-    const playerID = playerRows[0].PlayerID;
+	try {
+		/*
+			// Find PlayerID
+	const [playerRows] = await db.query(
+	  'SELECT PlayerID FROM Players WHERE CONCAT(FirstName, " ", LastName) = ?',
+	  [CurrentPlayerName]
+	);
+	if (playerRows.length === 0) {
+	  return res.status(400).send('Player not found.');
+	}
+	const playerID = playerRows[0].PlayerID;
 
-    // Find StatisticID
-    const [statRows] = await db.query(
-      'SELECT StatisticID FROM Statistics WHERE StatisticName = ?',
-      [CurrentStatisticName]
-    );
-    if (statRows.length === 0) {
-      return res.status(400).send('Statistic not found.');
-    }
-    const statisticID = statRows[0].StatisticID;
+		// Find StatisticID
+	const [statRows] = await db.query(
+	  'SELECT StatisticID FROM Statistics WHERE StatisticName = ?',
+	  [CurrentStatisticName]
+	);
+	if (statRows.length === 0) {
+	  return res.status(400).send('Statistic not found.');
+	}
+	const statisticID = statRows[0].StatisticID;
+	*/
 
-    // Update PlayerStatistics entry
-    await db.query(
-      'UPDATE PlayerStatistics SET ValueOfStatistic = ? WHERE PlayerID = ? AND StatisticID = ? AND GameID = ?',
-      [ValueOfStatistic, playerID, statisticID, GameID]
-    );
 
-    res.redirect('/playerstatistics');
-  } catch (err) {
-    console.error("Error updating player statistic:", err);
-    res.status(500).send("Error updating player statistic");
-  }
+		const parts = PlayerStatisticsID.split(' ');
+		const PlayerID = parts[0] || '';
+		const StatisticID = parts[1] || '';
+		const GameID = parts[2] || '';
+
+		// Update PlayerStatistics entry
+		await db.query(
+			'UPDATE PlayerStatistics SET ValueOfStatistic = ? WHERE PlayerID = ? AND StatisticID = ? AND GameID = ?',
+			[ValueOfStatistic, PlayerID, StatisticID, GameID]
+		);
+
+		res.redirect('/playerstatistics');
+	} catch (err) {
+		console.error("Error updating player statistic:", err);
+		res.status(500).send("Error updating player statistic");
+	}
 });
 
 
