@@ -2,11 +2,11 @@
 <table>
   <thead>
     <tr>
-      <th>Player ID</th>
-      <th>Statistic ID</th>
-      <th>Game ID</th>
+      <th>Player</th>
+      <th>Statistic</th>
+      <th>Game</th>
       <th>Value</th>
-      <th colspan="2">Actions</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -14,7 +14,7 @@
     <tr>
       <td>{{this.PlayerName}}</td>
       <td>{{this.StatName}}</td>
-      <td>{{this.GameDate}}</td>
+      <td>{{this.GameInfo}}</td>
       <td>{{this.ValueOfStatistic}}</td>
       <td class="snug">
         <form method="POST" action="/playerstatistics/delete">
@@ -22,14 +22,6 @@
           <input type="hidden" name="StatisticID" value="{{this.StatisticID}}" />
           <input type="hidden" name="GameID" value="{{this.GameID}}" />
           <button type="submit">Delete</button>
-        </form>
-      </td>
-      <td class="snug">
-        <form method="POST" action="/playerstatistics/update">
-          <input type="hidden" name="PlayerID" value="{{this.PlayerID}}" />
-          <input type="hidden" name="StatisticID" value="{{this.StatisticID}}" />
-          <input type="hidden" name="GameID" value="{{this.GameID}}" />
-          <button type="submit">Update</button>
         </form>
       </td>
     </tr>
@@ -40,10 +32,28 @@
 
 <h2>Add Player Statistic</h2>
 <form method="POST" action="/playerstatistics/add">
-  <div style="display: flex; gap: 10px;">
-    <input name="PlayerName" placeholder="Player Name" required />
-    <input name="StatisticName" placeholder="Statistic Name" required />
-    <input name="GameID" placeholder="Game ID" required />
+	<div style="display: flex; gap: 10px;">
+	<label for="playerSelect">Select a player</label>
+	<select name="PlayerID" id="PlayerSelect" required>
+	{{#each players}}
+		<option value="{{this.PlayerID}}">{{this.PlayerName}}</option>
+	{{/each}}
+	</select>
+
+	<label for="statisticSelect">Select a statistic</label>
+	<select name="StatisticID" id="statisticSelect" required>
+	{{#each statistics}}
+		<option value="{{this.StatisticID}}">{{this.StatisticName}}</option>
+	{{/each}}
+	</select>
+
+	<label for="gameSelect">Select a game</label>
+	<select name="GameID" id="gameSelect" required>
+	{{#each games}}
+		<option value="{{this.GameID}}">{{this.GameInfo}}</option>
+	{{/each}}
+	</select>
+
     <input name="ValueOfStatistic" placeholder="Value" required />
     <button type="submit" class="btn btn-primary">Add Stat</button>
   </div>

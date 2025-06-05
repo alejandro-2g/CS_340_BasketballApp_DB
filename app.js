@@ -100,15 +100,46 @@ app.get('/playerstatistics', async function (req, res) {
         ps.GameID,
         CONCAT(p.FirstName, ' ', p.LastName) AS PlayerName,
         s.Statisticname AS StatName,
-        g.Date AS GameDate,
+        CONCAT(
+			DATE_FORMAT(g.Date, '%Y-%m%-%d'), 
+			' ', t1.TeamName, ' vs. ', t2.TeamName) AS GameInfo,
         ps.ValueOfStatistic
       FROM PlayerStatistics ps
       JOIN Players p ON ps.PlayerID = p.PlayerID
       JOIN Statistics s ON ps.StatisticID = s.StatisticID
-      JOIN Games g ON ps.GameID = g.GameID;
+      JOIN Games g ON ps.GameID = g.GameID
+	  JOIN Teams t1 ON g.TeamAID = t1.TeamID
+	  JOIN Teams t2 ON g.TeamBID = t2.TeamID;
     `);
 
-    res.render('playerstatistics', { playerstatistics });
+	const [players] = await db.query(
+		`SELECT 
+			PlayerID,
+			CONCAT(Firstname, ' ', LastName) AS PlayerName
+		FROM Players;`
+	);
+	
+	const [statistics] = await db.query(
+		`SELECT
+			StatisticID,
+			StatisticName
+		FROM Statistics;`
+	);
+
+	const [games] = await db.query(`
+		SELECT  
+			GameID,
+			CONCAT(
+				DATE_FORMAT(Date, '%Y-%m%-%d'), 
+				' ', t1.TeamName, ' vs. ', t2.TeamName) AS GameInfo
+		FROM Games
+		JOIN Teams as t1 ON TeamAID = t1.TeamID
+		JOIN Teams as t2 ON TeamBID = t2.TeamID;
+	`);
+// await db.query('UPDATE Games SET Date=?, Location=?, TeamAID=?, TeamBID=?, ScoreA=?, ScoreB=? WHERE GameID=?', [Date, Location, TeamAID, TeamBID, ScoreA, ScoreB, GameID]);
+// DATE_FORMAT(Date, '%Y-%m%-%d') AS Date
+
+    res.render('playerstatistics', { playerstatistics, players, statistics, games });
   } catch (err) {
      console.error('ERROR in /playerstatistics route:', err);
     res.status(500).send('Error loading Player Statistics page');
@@ -334,9 +365,11 @@ app.post('/statistics/delete', async (req, res) => {
 
 // add player statistic
 app.post('/playerstatistics/add', async (req, res) => {
-  const { PlayerName, StatisticName, GameID, ValueOfStatistic } = req.body;
+  //const { PlayerName, StatisticName, GameID, ValueOfStatistic } = req.body;
+  const { PlayerID, StatisticID, GameID, ValueOfStatistic } = req.body;
 
   try {
+	/*
     // Find PlayerID
     const [playerRows] = await db.query(
       'SELECT PlayerID FROM Players WHERE CONCAT(FirstName, " ", LastName) = ?',
@@ -356,11 +389,12 @@ app.post('/playerstatistics/add', async (req, res) => {
       return res.status(400).send('Statistic not found.');
     }
     const statisticID = statRows[0].StatisticID;
+	*/
 
     // Insert into PlayerStatistics
     await db.query(
       'INSERT INTO PlayerStatistics (PlayerID, StatisticID, GameID, ValueOfStatistic) VALUES (?, ?, ?, ?)',
-      [playerID, statisticID, GameID, ValueOfStatistic]
+      [PlayerID, StatisticID, GameID, ValueOfStatistic]
     );
 
     res.redirect('/playerstatistics');
