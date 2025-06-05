@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-const PORT = 5331 ;
+const PORT = 5330 ;
 
 // Database
 const db = require('./database/db-connector');
@@ -103,7 +103,7 @@ app.get('/playerstatistics', async function (req, res) {
 app.get('/teamplayers', async function (req, res) {
     console.log("GET /teamplayers route hit");  
     try {
-        const query = `
+        const intersectQuery = `
             SELECT 
                 t.TeamName,
                 CONCAT(p.FirstName, ' ', p.LastName) AS PlayerName,
@@ -115,8 +115,21 @@ app.get('/teamplayers', async function (req, res) {
             JOIN Players p ON tp.PlayerID = p.PlayerID
             ORDER BY t.TeamName, PlayerName;
         `;
-        const [teamplayers] = await db.query(query);
-        res.render('teamplayers', { teamplayers });
+        const [teamplayers] = await db.query(intersectQuery);
+
+		const teamsOnlyQuery = `
+			SELECT
+				TeamID,
+				TeamName
+			FROM Teams;
+		`
+        const [teams] = await db.query(teamsOnlyQuery);
+
+		const playersOnlyQuery = `
+			SELECT PlayerID, CONCAT(FirstName, ' ', LastName) AS PlayerName FROM Players;`
+        const [players] = await db.query(playersOnlyQuery);
+
+        res.render('teamplayers', { teamplayers, teams, players });
     } catch (err) {
         console.error('Error loading TeamPlayers page:', err);
         res.status(500).send('Error loading TeamPlayers page');
@@ -400,8 +413,9 @@ app.post('/playerstatistics/delete', async (req, res) => {
 // Add a player to a team
 app.post('/teamplayers/add', async (req, res) => {
   try {
-    const { TeamName, PlayerName, JerseyNumber } = req.body;
+    const { TeamID, PlayerID, JerseyNumber } = req.body;
 
+	/*
     // Find TeamID
     const [teamRows] = await db.query('SELECT TeamID FROM Teams WHERE TeamName = ?', [TeamName]);
     if (teamRows.length === 0) {
@@ -415,9 +429,10 @@ app.post('/teamplayers/add', async (req, res) => {
       return res.status(400).send('Player not found.');
     }
     const playerID = playerRows[0].PlayerID;
+	*/
 
     // Insert into TeamPlayers
-    await db.query('INSERT INTO TeamPlayers (TeamID, PlayerID, JerseyNumber) VALUES (?, ?, ?)', [teamID, playerID, JerseyNumber]);
+    await db.query('INSERT INTO TeamPlayers (TeamID, PlayerID, JerseyNumber) VALUES (?, ?, ?)', [TeamID, PlayerID, JerseyNumber]);
 
     res.redirect('/teamplayers');
   } catch (err) {
