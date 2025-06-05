@@ -57,8 +57,24 @@ app.get('/teams', async function (req, res) {
 //for games
 app.get('/games', async function (req, res) {
     try {
-        const [games] = await db.query('SELECT * FROM Games;');
-        res.render('games', { games });
+        const [games] = await db.query(`
+			SELECT  
+				GameID,
+				Location,
+				TeamAID, 
+				t1.TeamName AS TeamAName,
+				TeamBID, 
+				t2.teamName AS TeamBName,
+				ScoreA,
+				ScoreB,
+				DATE_FORMAT(Date, '%Y-%m%-%d') AS Date
+			FROM Games
+			JOIN Teams as t1 ON TeamAID = t1.TeamID
+			JOIN Teams as t2 ON TeamBID = t2.TeamID;
+		`);
+        const [teams] = await db.query(`SELECT * FROM Teams;`);
+		
+        res.render('games', { games, teams });
     } catch (err) {
         res.status(500).send('Error loading Games page');
     }

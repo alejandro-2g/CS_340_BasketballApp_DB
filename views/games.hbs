@@ -18,8 +18,8 @@
       <td>{{this.GameID}}</td>
       <td>{{this.Date}}</td>
       <td>{{this.Location}}</td>
-      <td>{{this.TeamAID}}</td>
-      <td>{{this.TeamBID}}</td>
+      <td>{{this.TeamAName}}</td>
+      <td>{{this.TeamBName}}</td>
       <td>{{this.ScoreA}}</td>
       <td>{{this.ScoreB}}</td>
       <td class="snug">
@@ -43,9 +43,19 @@
 <form method="POST" action="/games/add">
   <input name="Date" type="date" required />
   <input name="Location" placeholder="Location" required />
-  <input name="TeamAID" placeholder="Team A ID" required />
-  <input name="TeamBID" placeholder="Team B ID" required />
-  <input name="ScoreA" type="number" />
-  <input name="ScoreB" type="number" />
+  <label for="TeamASelect">Select Team A</label>
+  <select name="TeamAID" id="TeamASelect" required>
+  {{#each teams}}
+    <option value="{{this.TeamID}}">{{this.TeamName}}</option>
+  {{/each}}
+  </select>
+  <label for="TeamBSelect">Select Team B</label>
+  <select name="TeamBID" id="TeamBSelect" required>
+  {{#each teams}}
+    <option value="{{this.TeamID}}">{{this.TeamName}}</option>
+  {{/each}}
+  </select>
+  <input name="ScoreA" type="number" placeholder="Team A Score" />
+  <input name="ScoreB" type="number" placeholder="Team B Score" />
   <button type="submit">Add Game</button>
 </form>
