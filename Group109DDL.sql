@@ -3,6 +3,11 @@
 -- Author: Alejandro Cervantes Flores & Nora Jacobi
 -- Description: SQL queries and Example Data for Basketball Club Management
 
+-- Citation for the DDL 
+-- Date: 04/28/2025
+-- Adapted/Based on: Exploration - Creating ER Diagram MySQL Workbench
+-- Source URL: https://canvas.oregonstate.edu/courses/1999601/pages/exploration-creating-er-diagram-mysql-workbench
+
 DROP PROCEDURE IF EXISTS ResetPickupDB;
 DELIMITER //
 

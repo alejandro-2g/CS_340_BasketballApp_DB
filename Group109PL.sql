@@ -1,3 +1,11 @@
+--Group 109: Alejandro Cervantes Flores, Nora Jacobi
+-- Citation for the PL
+-- Date: 05/12/2025
+-- Adapted/Based on: Exploration: PL/SQL part 1, SP, View and Function, Exploration: PL/SQL part 2, Stored Procedures for CUD 
+-- Source URL: 
+-- https://canvas.oregonstate.edu/courses/1999601/pages/exploration-pl-slash-sql-part-1-sp-view-and-function?module_item_id=25352958
+-- https://canvas.oregonstate.edu/courses/1999601/pages/exploration-pl-slash-sql-part-2-stored-procedures-for-cud?module_item_id=25352959
+
 -- Create player
 DROP PROCEDURE IF EXISTS sp_CreatePlayer;
 

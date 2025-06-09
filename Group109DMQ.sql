@@ -1,6 +1,11 @@
 
 -- CS 340 Group 109: Alejandro Cervantes Flores, Nora Jacobi
 
+-- Citation for the DMQ 
+-- Date: 05/08/2025
+-- Adapted/Based on: bsg_sample_data_manipulation_queries.sql in Project Step 3 
+-- Source URL: https://canvas.oregonstate.edu/courses/1999601/assignments/10006387?module_item_id=25352952
+
 -- ========= PLAYERS =========
 -- Insert a new player into the Players table
 INSERT INTO Players (FirstName, LastName, Position, SkillLevel)
