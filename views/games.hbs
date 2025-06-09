@@ -50,6 +50,7 @@
     <li>Teams must already exist in database to see it on the dropdown menu</li>
   </ul>
 </div>
+
 <form method="POST" action="/games/add">
   <input name="Date" type="date" required />
   <input name="Location" placeholder="Location" required />
@@ -80,12 +81,14 @@
   </select>
   <input name="Date" type="date" required />
   <input name="Location" placeholder="Location" required />
+
   <label for="TeamASelect">Select Team A</label>
   <select name="TeamAID" id="TeamASelect" required>
   {{#each teams}}
     <option value="{{this.TeamID}}">{{this.TeamName}}</option>
   {{/each}}
   </select>
+
   <label for="TeamBSelect">Select Team B</label>
   <select name="TeamBID" id="TeamBSelect" required>
   {{#each teams}}
