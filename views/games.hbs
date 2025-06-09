@@ -39,6 +39,17 @@
 </table>
 
 <h2>Schedule New Game</h2>
+<!-- Instruction box above the form -->
+<div style="max-width: 500px; margin-bottom: 16px; padding: 12px; border: 1px solid #ccc; background: #f9f9f9;">
+  <h4 style="margin-top: 0;">Instructions</h4>
+  <ul style="margin: 0; padding-left: 18px;">
+    <li>Choose the game date and enter the location.</li>
+    <li>Select Team A and Team B from the dropdowns (they must be different).</li>
+    <li>Optionally enter scores (leave blank if not yet played).</li>
+    <li>Click “Add Game” to create a new game record.</li>
+    <li>Teams must already exist in database to see it on the dropdown menu</li>
+  </ul>
+</div>
 <form method="POST" action="/games/add">
   <input name="Date" type="date" required />
   <input name="Location" placeholder="Location" required />

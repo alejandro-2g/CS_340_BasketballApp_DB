@@ -30,11 +30,25 @@
 </table>
 
 <h2>Add New Statistic</h2>
-<form method="POST" action="/statistics/add">
-  <input name="StatisticName" placeholder="Statistic Name" required />
-  <input name="Description" placeholder="Description" />
-  <button type="submit">Add Statistic</button>
-</form>
+<div style="display: flex; gap: 32px; align-items: flex-start;">
+  <!-- Add Statistic Form -->
+  <form method="POST" action="/statistics/add">
+    <input name="StatisticName" placeholder="Statistic Name" required />
+    <input name="Description" placeholder="Description" />
+    <button type="submit">Add Statistic</button>
+  </form>
+
+  <!-- Instructions Box -->
+  <div style="max-width: 300px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9;">
+    <h4>Instructions</h4>
+    <ul>
+      <li>Statistic Name is required (e.g., Points, Assists).</li>
+      <li>Description helps clarify what this stat measures.</li>
+      <li>Click “Add Statistic” to save it to the database.</li>
+    </ul>
+  </div>
+</div>
+
 
 <h2>Update a Statistic</h2>
 <form method="POST" action="/statistics/update">

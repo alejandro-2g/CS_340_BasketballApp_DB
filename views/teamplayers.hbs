@@ -34,22 +34,37 @@
 </table>
 
 <h2>Add Player to Team</h2>
-<form method="POST" action="/teamplayers/add">
-  <div style="display: flex; gap: 10px;">
-    <select name="TeamID" id="TeamID" required>
-    {{#each teams }}
-      <option value="{{this.TeamID}}">{{this.TeamName}}</option>
-    {{/each}}
-    </select>
-    <select name="PlayerID" id="PlayerID" required>
-    {{#each players }}
-      <option value="{{this.PlayerID}}">{{this.PlayerName}}</option>
-    {{/each}}
-    </select>
-	<input name="JerseyNumber" placeholder="Jersey Number" />
-    <button type="submit" class="btn btn-primary">Add</button>
+<div style="display: flex; gap: 32px; align-items: flex-start;">
+  <!-- Add Player to Team Form -->
+  <form method="POST" action="/teamplayers/add">
+    <div style="display: flex; gap: 10px;">
+      <select name="TeamID" id="TeamID" required>
+        {{#each teams }}
+          <option value="{{this.TeamID}}">{{this.TeamName}}</option>
+        {{/each}}
+      </select>
+      <select name="PlayerID" id="PlayerID" required>
+        {{#each players }}
+          <option value="{{this.PlayerID}}">{{this.PlayerName}}</option>
+        {{/each}}
+      </select>
+      <input name="JerseyNumber" placeholder="Jersey Number" />
+      <button type="submit" class="btn btn-primary">Add</button>
+    </div>
+  </form>
+
+  <!-- Instruction box -->
+  <div style="max-width: 300px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9;">
+    <h4>Instructions</h4>
+    <ul>
+      <li>Select a team and a player to assign.</li>
+      <li>Enter the player’s jersey number (optional).</li>
+      <li>Click “Add” to assign the player to the team.</li>
+      <li>Player and Team must already exist in database</li>
+    </ul>
   </div>
-</form>
+</div>
+
 
 <h2>Update Jersey Number</h2>
 <form method="POST" action="/teamplayers/update">

@@ -38,33 +38,47 @@
 
 
 <h2>Add Player Statistic</h2>
+
+<!-- Instruction box ABOVE the form -->
+<div style="max-width: 500px; margin-bottom: 16px; padding: 12px; border: 1px solid #ccc; background: #f9f9f9;">
+  <h4 style="margin-top: 0;">Instructions</h4>
+  <ul style="margin: 0; padding-left: 18px;">
+    <li>Select a player, stat, and game from the dropdowns.</li>
+    <li>Enter the value they achieved (e.g., 12).</li>
+    <li>Click “Add Stat” to submit the record.</li>
+    <li>The Statistic must already exist to see it on the dropdown menu</li>
+  </ul>
+</div>
+
+<!-- Add Stat Form -->
 <form method="POST" action="/playerstatistics/add">
-	<div style="display: flex; gap: 10px;">
-	<label for="playerSelect">Select a player</label>
-	<select name="PlayerID" id="PlayerSelect" required>
-	{{#each players}}
-		<option value="{{this.PlayerID}}">{{this.PlayerName}}</option>
-	{{/each}}
-	</select>
+  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <label for="playerSelect">Select a player</label>
+    <select name="PlayerID" id="PlayerSelect" required>
+      {{#each players}}
+        <option value="{{this.PlayerID}}">{{this.PlayerName}}</option>
+      {{/each}}
+    </select>
 
-	<label for="statisticSelect">Select a statistic</label>
-	<select name="StatisticID" id="statisticSelect" required>
-	{{#each statistics}}
-		<option value="{{this.StatisticID}}">{{this.StatisticName}}</option>
-	{{/each}}
-	</select>
+    <label for="statisticSelect">Select a statistic</label>
+    <select name="StatisticID" id="statisticSelect" required>
+      {{#each statistics}}
+        <option value="{{this.StatisticID}}">{{this.StatisticName}}</option>
+      {{/each}}
+    </select>
 
-	<label for="gameSelect">Select a game</label>
-	<select name="GameID" id="gameSelect" required>
-	{{#each games}}
-		<option value="{{this.GameID}}">{{this.GameInfo}}</option>
-	{{/each}}
-	</select>
+    <label for="gameSelect">Select a game</label>
+    <select name="GameID" id="gameSelect" required>
+      {{#each games}}
+        <option value="{{this.GameID}}">{{this.GameInfo}}</option>
+      {{/each}}
+    </select>
 
     <input name="ValueOfStatistic" placeholder="Value" required />
     <button type="submit" class="btn btn-primary">Add Stat</button>
   </div>
 </form>
+
 
 <h2>Update statistic value</h2>
 <form method="POST" action="/playerstatistics/update" style="display: flex; gap: 5px;">

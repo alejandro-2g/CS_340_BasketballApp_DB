@@ -1,7 +1,7 @@
-//# Citation for the following code: 
+//# Citation for all the route handler and setup code: 
 //# Date: 05/08/2025 
 //# Copied/Adapted from Module 6 Exploration - Web App Technology Node.js section
-//# Used base structure for Express routing, db-connector, and Handlebars templating. Original logic was added for my own entities, routes, and CUD operations.
+//# Used base structure for Express routing, db-connector, listener and Handlebars templating. Original logic was added for my own entities, routes, and CUD operations.
 //# Source URL: https://canvas.oregonstate.edu/courses/1999601/pages/exploration-web-application-technology-2?module_item_id=25352948
 //# AI tools like copilot were used for general debugging
 //# Summary of prompts:
@@ -35,7 +35,7 @@ app.set('view engine', '.hbs');
 //for home 
 app.get('/', async function (req, res) {
     try {
-        res.render('home'); // Make sure you have a views/home.hbs file
+        res.render('home'); 
     } catch (error) {
         console.error('Error rendering homepage:', error);
         res.status(500).send('Failed to load homepage.');
@@ -64,30 +64,23 @@ app.get('/teams', async function (req, res) {
     }
 });
 
-//for games
-app.get('/games', async function (req, res) {
-    try {
-        const [games] = await db.query(`
-			SELECT  
-				GameID,
-				Location,
-				TeamAID, 
-				t1.TeamName AS TeamAName,
-				TeamBID, 
-				t2.teamName AS TeamBName,
-				ScoreA,
-				ScoreB,
-				DATE_FORMAT(Date, '%Y-%m%-%d') AS Date
-			FROM Games
-			JOIN Teams as t1 ON TeamAID = t1.TeamID
-			JOIN Teams as t2 ON TeamBID = t2.TeamID;
-		`);
-        const [teams] = await db.query(`SELECT * FROM Teams;`);
-		
-        res.render('games', { games, teams });
-    } catch (err) {
-        res.status(500).send('Error loading Games page');
-    }
+//for games — display all games and team names
+app.get('/games', async (req, res) => {
+  try {
+    const [games] = await db.query(`
+      SELECT GameID, Location, TeamAID, t1.TeamName AS TeamAName,
+             TeamBID, t2.TeamName AS TeamBName, ScoreA, ScoreB,
+             DATE_FORMAT(Date, '%Y-%m-%d') AS Date
+      FROM Games
+      JOIN Teams AS t1 ON TeamAID = t1.TeamID
+      JOIN Teams AS t2 ON TeamBID = t2.TeamID;
+    `);
+    const [teams] = await db.query('SELECT * FROM Teams;');
+    res.render('games', { games, teams });
+  } catch (err) {
+    console.error('Error loading /games route:', err);
+    res.status(500).send('Error loading Games page');
+  }
 });
 
 //for statistics
@@ -100,59 +93,45 @@ app.get('/statistics', async function (req, res) {
     }
 });
 
-//for playerstatistics
-app.get('/playerstatistics', async function (req, res) {
+// for playerstatistics — display all stats with player/game context
+app.get('/playerstatistics', async (req, res) => {
   try {
     const [playerstatistics] = await db.query(`
-      SELECT 
-        ps.PlayerID,
-        ps.StatisticID,
-        ps.GameID,
-        CONCAT(p.FirstName, ' ', p.LastName) AS PlayerName,
-        s.Statisticname AS StatName,
-        CONCAT(
-			DATE_FORMAT(g.Date, '%Y-%m%-%d'), 
-			' ', t1.TeamName, ' vs. ', t2.TeamName) AS GameInfo,
-        ps.ValueOfStatistic
+      SELECT ps.PlayerID, ps.StatisticID, ps.GameID,
+             CONCAT(p.FirstName, ' ', p.LastName) AS PlayerName,
+             s.StatisticName AS StatName,
+             CONCAT(DATE_FORMAT(g.Date, '%Y-%m-%d'), ' ', t1.TeamName, ' vs. ', t2.TeamName) AS GameInfo,
+             ps.ValueOfStatistic
       FROM PlayerStatistics ps
       JOIN Players p ON ps.PlayerID = p.PlayerID
       JOIN Statistics s ON ps.StatisticID = s.StatisticID
       JOIN Games g ON ps.GameID = g.GameID
-	  JOIN Teams t1 ON g.TeamAID = t1.TeamID
-	  JOIN Teams t2 ON g.TeamBID = t2.TeamID;
+      JOIN Teams t1 ON g.TeamAID = t1.TeamID
+      JOIN Teams t2 ON g.TeamBID = t2.TeamID;
     `);
 
-	const [players] = await db.query(
-		`SELECT 
-			PlayerID,
-			CONCAT(Firstname, ' ', LastName) AS PlayerName
-		FROM Players;`
-	);
-	
-	const [statistics] = await db.query(
-		`SELECT
-			StatisticID,
-			StatisticName
-		FROM Statistics;`
-	);
+    const [players] = await db.query(`
+      SELECT PlayerID, CONCAT(FirstName, ' ', LastName) AS PlayerName FROM Players;
+    `);
 
-	const [games] = await db.query(`
-		SELECT  
-			GameID,
-			CONCAT(
-				DATE_FORMAT(Date, '%Y-%m%-%d'), 
-				' ', t1.TeamName, ' vs. ', t2.TeamName) AS GameInfo
-		FROM Games
-		JOIN Teams as t1 ON TeamAID = t1.TeamID
-		JOIN Teams as t2 ON TeamBID = t2.TeamID;
-	`);
+    const [statistics] = await db.query(`
+      SELECT StatisticID, StatisticName FROM Statistics;
+    `);
+
+    const [games] = await db.query(`
+      SELECT GameID, CONCAT(DATE_FORMAT(Date, '%Y-%m-%d'), ' ', t1.TeamName, ' vs. ', t2.TeamName) AS GameInfo
+      FROM Games
+      JOIN Teams t1 ON TeamAID = t1.TeamID
+      JOIN Teams t2 ON TeamBID = t2.TeamID;
+    `);
 
     res.render('playerstatistics', { playerstatistics, players, statistics, games });
   } catch (err) {
-     console.error('ERROR in /playerstatistics route:', err);
+    console.error('ERROR in /playerstatistics route:', err);
     res.status(500).send('Error loading Player Statistics page');
   }
 });
+
 
 //for team players
 app.get('/teamplayers', async function (req, res) {
@@ -201,6 +180,14 @@ app.get('/reset', async function (req, res) {
     res.status(500).send('Error resetting database');
   }
 });
+
+
+//# Citation for all the CUD operations code: 
+//# Date: 05/17/2025 
+//# Adapted from Module 8 Exploration - Implementing CUD operations in your app
+//# Used base structure for CUD operations.
+//# Source URL: https://canvas.oregonstate.edu/courses/1999601/pages/exploration-implementing-cud-operations-in-your-app?module_item_id=25352968
+
 
 // ##################################################
 // ################# Player CUD ######################

@@ -31,11 +31,24 @@
 </table>
 
 <h2>Add New Team</h2>
-<form method="POST" action="/teams/add">
-  <input name="TeamName" placeholder="Team Name" required />
-  <input name="CoachName" placeholder="Coach Name" />
-  <button type="submit">Add Team</button>
-</form>
+<div style="display: flex; gap: 32px; align-items: flex-start;">
+  <!-- Add Team Form -->
+  <form method="POST" action="/teams/add">
+    <input name="TeamName" placeholder="Team Name" required />
+    <input name="CoachName" placeholder="Coach Name" />
+    <button type="submit">Add Team</button>
+  </form>
+
+  <!-- Instructions Box -->
+  <div style="max-width: 300px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9;">
+    <h4>Instructions</h4>
+    <ul>
+      <li>Team Name is required.</li>
+      <li>Coach Name is optional.</li>
+      <li>Click “Add Team” to insert the new record.</li>
+    </ul>
+  </div>
+</div>
 
 <h2>Update a Team</h2>
 <form method="POST" action="/teams/update">
