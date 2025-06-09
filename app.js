@@ -1,5 +1,15 @@
+//# Citation for the following code: 
+//# Date: 05/08/2025 
+//# Copied/Adapted from Module 6 Exploration - Web App Technology Node.js section
+//# Used base structure for Express routing, db-connector, and Handlebars templating. Original logic was added for my own entities, routes, and CUD operations.
+//# Source URL: https://canvas.oregonstate.edu/courses/1999601/pages/exploration-web-application-technology-2?module_item_id=25352948
+//# AI tools like copilot were used for general debugging
+//# Summary of prompts:
+//# Asked how to prevent inserting duplicate (PlayerID, StatisticID, GameID) tuples
+
+
 // ########################################
-// ########## SETUP
+// ########## SETUP########################
 
 // Express
 const express = require('express');
@@ -19,9 +29,8 @@ app.engine('.hbs', engine({ extname: '.hbs' })); // Create instance of handlebar
 app.set('view engine', '.hbs'); 
 
 // ########################################
-// ########## ROUTE HANDLERS
+// ########## ROUTE HANDLERS ##############
 
-// READ ROUTES
 
 //for home 
 app.get('/', async function (req, res) {
@@ -32,6 +41,7 @@ app.get('/', async function (req, res) {
         res.status(500).send('Failed to load homepage.');
     }
 });
+
 //for players
 app.get('/players', async function (req, res) {
     try {
@@ -136,8 +146,6 @@ app.get('/playerstatistics', async function (req, res) {
 		JOIN Teams as t1 ON TeamAID = t1.TeamID
 		JOIN Teams as t2 ON TeamBID = t2.TeamID;
 	`);
-// await db.query('UPDATE Games SET Date=?, Location=?, TeamAID=?, TeamBID=?, ScoreA=?, ScoreB=? WHERE GameID=?', [Date, Location, TeamAID, TeamBID, ScoreA, ScoreB, GameID]);
-// DATE_FORMAT(Date, '%Y-%m%-%d') AS Date
 
     res.render('playerstatistics', { playerstatistics, players, statistics, games });
   } catch (err) {
@@ -365,36 +373,13 @@ app.post('/statistics/delete', async (req, res) => {
 
 // add player statistic
 app.post('/playerstatistics/add', async (req, res) => {
-  //const { PlayerName, StatisticName, GameID, ValueOfStatistic } = req.body;
   const { PlayerID, StatisticID, GameID, ValueOfStatistic } = req.body;
 
   try {
-	/*
-    // Find PlayerID
-    const [playerRows] = await db.query(
-      'SELECT PlayerID FROM Players WHERE CONCAT(FirstName, " ", LastName) = ?',
-      [PlayerName]
-    );
-    if (playerRows.length === 0) {
-      return res.status(400).send('Player not found.');
-    }
-    const playerID = playerRows[0].PlayerID;
-
-    // Find StatisticID
-    const [statRows] = await db.query(
-      'SELECT StatisticID FROM Statistics WHERE StatisticName = ?',
-      [StatisticName]
-    );
-    if (statRows.length === 0) {
-      return res.status(400).send('Statistic not found.');
-    }
-    const statisticID = statRows[0].StatisticID;
-	*/
-
     // Insert into PlayerStatistics
     await db.query(
       'INSERT INTO PlayerStatistics (PlayerID, StatisticID, GameID, ValueOfStatistic) VALUES (?, ?, ?, ?)',
-      [PlayerID, statisticID, GameID, ValueOfStatistic]
+      [PlayerID, StatisticID, GameID, ValueOfStatistic]
     );
 
     res.redirect('/playerstatistics');
@@ -405,35 +390,10 @@ app.post('/playerstatistics/add', async (req, res) => {
 });
 
 
-
 app.post('/playerstatistics/update', async (req, res) => {
-	//const { CurrentPlayerName, CurrentStatisticName, GameID, ValueOfStatistic } = req.body;
 	const { PlayerStatisticsID, ValueOfStatistic } = req.body;
 
 	try {
-		/*
-			// Find PlayerID
-	const [playerRows] = await db.query(
-	  'SELECT PlayerID FROM Players WHERE CONCAT(FirstName, " ", LastName) = ?',
-	  [CurrentPlayerName]
-	);
-	if (playerRows.length === 0) {
-	  return res.status(400).send('Player not found.');
-	}
-	const playerID = playerRows[0].PlayerID;
-
-		// Find StatisticID
-	const [statRows] = await db.query(
-	  'SELECT StatisticID FROM Statistics WHERE StatisticName = ?',
-	  [CurrentStatisticName]
-	);
-	if (statRows.length === 0) {
-	  return res.status(400).send('Statistic not found.');
-	}
-	const statisticID = statRows[0].StatisticID;
-	*/
-
-
 		const parts = PlayerStatisticsID.split(' ');
 		const PlayerID = parts[0] || '';
 		const StatisticID = parts[1] || '';
@@ -473,23 +433,6 @@ app.post('/playerstatistics/delete', async (req, res) => {
 app.post('/teamplayers/add', async (req, res) => {
   try {
     const { TeamID, PlayerID, JerseyNumber } = req.body;
-
-	/*
-    // Find TeamID
-    const [teamRows] = await db.query('SELECT TeamID FROM Teams WHERE TeamName = ?', [TeamName]);
-    if (teamRows.length === 0) {
-      return res.status(400).send('Team not found.');
-    }
-    const teamID = teamRows[0].TeamID;
-
-    // Find PlayerID
-    const [playerRows] = await db.query('SELECT PlayerID FROM Players WHERE CONCAT(FirstName, " ", LastName) = ?', [PlayerName]);
-    if (playerRows.length === 0) {
-      return res.status(400).send('Player not found.');
-    }
-    const playerID = playerRows[0].PlayerID;
-	*/
-
     // Insert into TeamPlayers
     await db.query('INSERT INTO TeamPlayers (TeamID, PlayerID, JerseyNumber) VALUES (?, ?, ?)', [TeamID, PlayerID, JerseyNumber]);
 
@@ -499,7 +442,6 @@ app.post('/teamplayers/add', async (req, res) => {
     res.status(500).send('Error adding player to team');
   }
 });
-
 
 
 app.post('/teamplayers/update', async (req, res) => {
@@ -548,7 +490,6 @@ app.post('/teamplayers/update-names', async (req, res) => {
 });
 
 
-
 // Delete a team player 
 app.post('/teamplayers/delete', async (req, res) => {
   const { TeamPlayerID } = req.body;
@@ -567,11 +508,8 @@ app.post('/teamplayers/delete', async (req, res) => {
 });
 
 
-
-
 // ########################################
-// ########## LISTENER
-
+// ########## LISTENER#####################
 app.listen(PORT, function () {
     console.log(
         'Express started on http://localhost:' +
