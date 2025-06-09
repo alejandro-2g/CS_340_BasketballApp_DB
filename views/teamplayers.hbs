@@ -1,3 +1,10 @@
+<!-- Citation for the following code: 
+//# Date: 05/08/2025 
+//# Adapted from Module 6 Exploration - Web App Technology Node.js section
+//# Used base structure for Handlebars templating. Original logic was added for my own entities pages.
+//# Source URL: https://canvas.oregonstate.edu/courses/1999601/pages/exploration-web-application-technology-2?module_item_id=25352948
+-->
+
 <h2>Team Players</h2>
 
 <table border="1" cellpadding="8">
@@ -29,8 +36,16 @@
 <h2>Add Player to Team</h2>
 <form method="POST" action="/teamplayers/add">
   <div style="display: flex; gap: 10px;">
-    <input name="TeamName" placeholder="Team Name" required />
-    <input name="PlayerName" placeholder="Player Name" required />
+    <select name="TeamID" id="TeamID" required>
+    {{#each teams }}
+      <option value="{{this.TeamID}}">{{this.TeamName}}</option>
+    {{/each}}
+    </select>
+    <select name="PlayerID" id="PlayerID" required>
+    {{#each players }}
+      <option value="{{this.PlayerID}}">{{this.PlayerName}}</option>
+    {{/each}}
+    </select>
 	<input name="JerseyNumber" placeholder="Jersey Number" />
     <button type="submit" class="btn btn-primary">Add</button>
   </div>
@@ -41,7 +56,7 @@
   <div style="display: flex; gap: 10px;">
     <label for="PairSelect">Select a team-player pairing</label>
     <select name="TeamPlayerID" id="PairSelect" required>
-    {{#each teamplayers}}
+    {{#each teamplayers }}
       <option value="{{this.TeamID}} {{this.PlayerID}}">{{this.TeamName}}/{{this.PlayerName}}</option>
     {{/each}}
     </select>
