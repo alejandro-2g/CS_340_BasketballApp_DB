@@ -1,3 +1,10 @@
+/*
+# Citation for all the CSS:
+# Date: 04/10/2025
+# All original work
+# Source/Modified by: Alejandro Cervantes Flores, Nora Jacobi
+*\
+
 /* Typography */
 body {
     font-family: 'Segoe UI', sans-serif;
@@ -9,7 +16,7 @@ body {
 
 h1, h2 {
     margin-left: 16px;
-    color: #1D428A; /* NBA royal blue */
+    color: #1D428A; /* NBA royal blue for a basketball theme */
 }
 
 /* Table Styles */
